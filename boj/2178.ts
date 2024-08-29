@@ -2,6 +2,10 @@ const fs = require('fs').readFileSync('/dev/stdin');
 const inputs = fs.toString().trim().split('\n');
 const [col, row] = inputs.shift().split(' ').map(Number);
 const graph = inputs.map((row: string) => row.split('').map(Number));
+
+// 숨어있는 지켜줘야하는 규칙
+// const dy = [-1, 0, 1, 0];
+// const dx = [0, 1, 0, -1];
 const direction = [
   [-1, 0],
   [0, 1],
@@ -14,8 +18,14 @@ function bfs() {
   let distance = Array.from({ length: col }, () => new Array(row).fill(0));
   distance[0][0] = 1;
 
-  while (queue.length) {
-    const [y, x] = queue.shift();
+  // 맞긴한데, 스스로 맞다는걸 설득못하는 코드
+  //   while (queue.length) {
+  //     const [y, x] = queue.shift();
+  while (true) {
+    const d = queue.shift();
+    if (!d) return;
+
+    const [y, x] = d;
 
     if (y === col - 1 && x === row - 1) {
       console.log(distance[y][x]);
