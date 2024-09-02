@@ -1,3 +1,4 @@
+import _ from 'lodash';
 const input = require('node:fs')
   .readFileSync('/dev/stdin')
   .toString()
@@ -6,21 +7,15 @@ const input = require('node:fs')
 const N = Number(input.shift());
 
 //초기화
-const graph = [];
-for (let i = 0; i < N; i++) {
-  graph.push(input[i].split(' ').map(Number));
-}
-const dp = Array.from({ length: N }, () =>
-  Array.from({ length: N }, () => Array(3).fill(0))
+const graph = _.map(input, (line: string) => _.map(_.split(line, ' '), Number));
+const dp = _.times(N, () => _.times(N, () => _.fill(Array(3), 0)));
+
+const wallArr = _.compact(
+  _.map(_.range(N), (i) =>
+    _.map(_.range(N), (j) => (graph[i][j] === 1 ? [j, i] : null))
+  ).flat()
 );
-const wallArr: [number, number][] = [];
-for (let i = 0; i < N; i++) {
-  for (let j = 0; j < N; j++) {
-    if (graph[i][j] === 1) {
-      wallArr.push([j, i]);
-    }
-  }
-}
+
 function go(x: number, y: number, type: number) {
   //경계선을 벗어나는지 체크
   if (x === N || y === N) {
