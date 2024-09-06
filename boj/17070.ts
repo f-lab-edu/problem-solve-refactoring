@@ -10,11 +10,9 @@ const N = Number(input.shift());
 const graph = _.map(input, (line: string) => _.map(_.split(line, ' '), Number));
 const dp = _.times(N, () => _.times(N, () => _.fill(Array(3), 0)));
 
-const wallArr = _.compact(
-  _.map(_.range(N), (i) =>
-    _.map(_.range(N), (j) => (graph[i][j] === 1 ? [j, i] : null))
-  ).flat()
-);
+const wallArr = _.range(N)
+  .flatMap((j) => _.range(N).map((i) => [i, j]))
+  .filter(([i, j]) => graph[j][i] === 1);
 
 function go(x: number, y: number, type: number) {
   //경계선을 벗어나는지 체크
