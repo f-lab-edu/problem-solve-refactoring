@@ -14,6 +14,38 @@ const wallArr = _.range(N)
   .flatMap((j) => _.range(N).map((i) => [i, j]))
   .filter(([i, j]) => graph[j][i] === 1);
 
+const getDPVal = memoize((x: number, y: number, type: number) => {
+  switch (type) {
+    case 0:
+      dp[x][y][type] = go(x, y + 1, 0) + go(x + 1, y + 1, 2);
+      break;
+    case 1:
+      dp[x][y][type] = go(x + 1, y, 1) + go(x + 1, y + 1, 2);
+      break;
+    case 2:
+      dp[x][y][type] = go(x, y + 1, 0) + go(x + 1, y, 1) + go(x + 1, y + 1, 2);
+      break;
+  }
+
+  return dp[x][y][type];
+});
+
+function memoize(f: (...args: number[]) => number) {
+  const map = new Map();
+
+  return (...args: number[]) => {
+    const key = JSON.stringify(args);
+
+    if (map.has(key)) {
+      return map.get(key);
+    }
+
+    const result = f(...args);
+    map.set(key, result);
+    return result;
+  };
+}
+
 function go(x: number, y: number, type: number) {
   //경계선을 벗어나는지 체크
   if (x === N || y === N) {
@@ -40,26 +72,7 @@ function go(x: number, y: number, type: number) {
     return 1;
   }
 
-  //메모이제이션
-  if (dp[x][y][type] !== 0) {
-    return dp[x][y][type];
-  }
-  /*
-    type에 따라 갈 수 있는 방향이 다르다
-    0: 가로 / 1: 세로 / 2: 대각선
-    **/
-  switch (type) {
-    case 0:
-      dp[x][y][0] = go(x, y + 1, 0) + go(x + 1, y + 1, 2);
-      break;
-    case 1:
-      dp[x][y][1] = go(x + 1, y, 1) + go(x + 1, y + 1, 2);
-      break;
-    case 2:
-      dp[x][y][2] = go(x, y + 1, 0) + go(x + 1, y, 1) + go(x + 1, y + 1, 2);
-      break;
-  }
-  return dp[x][y][type];
+  return getDPVal(x, y, type);
 }
 go(0, 1, 0);
 console.log(dp[0][1][0]);
