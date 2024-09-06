@@ -12,7 +12,7 @@ const map = new Map();
   }
 });
 
-const result = _.map(_.range(97, 123), (i) => {
+const result = _.range(97, 123).map((i) => {
   const char = String.fromCharCode(i);
   return map.has(char) ? map.get(char) : 0;
 });
