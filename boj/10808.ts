@@ -5,8 +5,10 @@ const inputs = 'baekjoon'.trim().split('');
 const map = new Map();
 
 [...inputs].forEach((char) => {
-  if (map.has(char)) {
-    map.set(char, map.get(char) + 1);
+  const value = map.get(char);
+
+  if (value) {
+    map.set(char, value + 1);
   } else {
     map.set(char, 1);
   }
